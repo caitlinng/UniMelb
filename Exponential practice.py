@@ -16,31 +16,30 @@ def expmodel(t, x):
 # Solve differential
 sol = solve_ivp(expmodel, (timepoints[0], timepoints[-1]), [a0])
 
-# True solution
-def expsltn(t):
-    return a0 * np.exp(a*t)
+a_values = np.linspace(0,10,5)
 
-sltn_x = []
-sltn_y = []
-
-for i in timepoints:
-    y = expsltn(i)
-    sltn_x.append(i)
-    sltn_y.append(y)
-
-# For each x value, calculate y (ae^(at))
-
-# Plotting
 fig1, ax1 = plt.subplots()
-ax1.plot(sol.t,sol.y[0])
+sltns_x = []
+sltns_y = []
 
-# On the same graph, plot true solutions
-ax1.plot(sltn_x, sltn_y, 'o')
+for i in range(5):
+    a = a_values.item(i)
+    print a
+    def expmodel(t, x): 
+        dxdt = a*x
+        return dxdt
+    
+    sol = solve_ivp(expmodel, (timepoints[0], timepoints[-1]), [a0])
+    sltns_x.append(sol.t)
+    sltns_y.append(sol.y[0])
+
+print sltns_y
+
+ax1.plot(sltns_x[0], sltns_y[0], 'b', sltns_x[1], sltns_y[1], 'g', sltns_x[2], sltns_y[2], 'r')
 
 # Formatting
 ax1.set_title("Exponential Growth")
 ax1.set_xlabel("Time")
 ax1.set_ylabel("Value")
-ax1.legend(('Computed','Solved'))
 
 plt.show()
